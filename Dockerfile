@@ -1,11 +1,12 @@
-# Use Python 3.6 or later as a base image
-
-# Copy contents into image
- 
-# Install pip dependencies from requirements
-
-# Set YOUR_NAME environment variable
-
-# Expose the correct port
-
-# Create an entrypoint
+ARG PYTHON_VERSION
+FROM python:${PYTHON_VERSION:-3.8}
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+ARG AUTHOR
+LABEL author=${AUTHOR}
+LABEL description="some app"
+LABEL version="1.0.1"
+ENV YOUR_NAME="josh"
+EXPOSE 5500
+ENTRYPOINT ["python", "app.py"]
