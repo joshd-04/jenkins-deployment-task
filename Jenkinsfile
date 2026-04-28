@@ -8,6 +8,17 @@ pipeline {
       }
     }
 
+    stage ("File system security scan") {
+      steps {
+        sh 'trivy fs --format json -o trivy-report.json .'
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'trivy-report.json', allowEmptyArchive: true
+        }
+      }
+    }
+
     stage ("Clean up / initialise") {
       steps {
         // 1) Clean up section (containers and/or images)
@@ -44,7 +55,15 @@ pipeline {
         echo "Running nginx reverse proxy"
         sh 'docker run -d -p 80:80 --network new-network --mount type=bind,source=$WORKSPACE/nginx.conf,target=/etc/nginx/nginx.conf --name nginx nginx'
 
+      }
+    }
 
+
+    stage("Test") {
+      steps {
+        echo "Running tests..."
+        // sh "sleep 5" // give Flask time to start
+        sh "python -m unittest test_app.py"
       }
     }
   }
