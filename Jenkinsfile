@@ -12,10 +12,10 @@ pipeline {
       steps {
         // 1) Clean up section (containers and/or images)
         echo "Removing existing containers and images"
-        sh 'docker rm -f $(docker ps -a -q)' // removes all containers by force
-        sh 'docker rmi -f $(docker images -q)' // removes all images by force
-        sh 'docker network rm new-network'
-        sh 'docker network create new-netowrk' 
+        sh 'docker rm -f $(docker ps -aq) || true' // removes all containers by force
+        sh 'docker rmi -f $(docker images -q) || true' // removes all images by force
+        sh 'docker network rm new-network || true'
+        sh 'docker network create new-network' 
       }
     }
 
@@ -42,7 +42,7 @@ pipeline {
         // 5) run nginx container with bind mount for conf.
 
         echo "Running nginx reverse proxy"
-        sh 'docker run -d -p 80:80 --network new-network --mount type=bind,source=$(pwd)/nginx.conf,target=/etc/nginx/nginx.conf --name nginx nginx'
+        sh 'docker run -d -p 80:80 --network new-network --mount type=bind,source=$WORKSPACE/nginx.conf,target=/etc/nginx/nginx.conf --name nginx nginx'
 
 
       }
