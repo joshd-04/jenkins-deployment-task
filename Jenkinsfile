@@ -12,10 +12,10 @@ pipeline {
       steps {
         // 1) Clean up section (containers and/or images)
         echo "Removing existing containers and images"
-        docker rm -f $(docker ps -a -q) // removes all containers by force
-        docker rmi -f $(docker images -q) // removes all images by force
-        docker network rm new-network
-        docker network create new-netowrk 
+        sh 'docker rm -f $(docker ps -a -q)' // removes all containers by force
+        sh 'docker rmi -f $(docker images -q)' // removes all images by force
+        sh 'docker network rm new-network'
+        sh 'docker network create new-netowrk' 
       }
     }
 
@@ -24,7 +24,7 @@ pipeline {
         // 2) Build images ( flaskapp)
 
         echo "Building flask app"
-        docker build --build-arg PYTHON_VERSION=3.12-slim --build-arg AUTHOR="Josh" -t flask-app .
+        sh 'docker build --build-arg PYTHON_VERSION=3.12-slim --build-arg AUTHOR="Josh" -t flask-app .'
       }
     }
 
@@ -33,7 +33,7 @@ pipeline {
         // 3) run flaskapp container
 
         echo "Running flask app"
-        docker run -d --network new-network --name flask-app flask-app
+        sh 'docker run -d --network new-network --name flask-app flask-app'
       }
     }
 
@@ -42,7 +42,7 @@ pipeline {
         // 5) run nginx container with bind mount for conf.
 
         echo "Running nginx reverse proxy"
-        docker run -d -p 80:80 --network new-network --mount type=bind,source=$(pwd)/nginx.conf,target=/etc/nginx/nginx.conf --name nginx nginx
+        sh 'docker run -d -p 80:80 --network new-network --mount type=bind,source=$(pwd)/nginx.conf,target=/etc/nginx/nginx.conf --name nginx nginx'
 
 
       }
