@@ -70,6 +70,9 @@ pipeline {
         sh '''
             echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
 
+            docker tag flask-app ${DOCKERHUB_REPO}:${IMAGE_TAG}
+            docker tag flask-app ${DOCKERHUB_REPO}:latest
+            
             docker push ${DOCKERHUB_REPO}:${IMAGE_TAG}
             docker push ${DOCKERHUB_REPO}:latest
         '''
