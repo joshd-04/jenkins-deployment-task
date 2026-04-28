@@ -72,7 +72,7 @@ pipeline {
 
             docker tag flask-app ${DOCKERHUB_REPO}:${IMAGE_TAG}
             docker tag flask-app ${DOCKERHUB_REPO}:latest
-            
+
             docker push ${DOCKERHUB_REPO}:${IMAGE_TAG}
             docker push ${DOCKERHUB_REPO}:latest
         '''
@@ -83,7 +83,6 @@ pipeline {
     stage("Test") {
       steps {
         echo "Running tests..."
-        // sh "sleep 5" // give Flask time to start
         sh "python3 -m unittest test_app.py"
       }
     }
