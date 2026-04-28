@@ -63,7 +63,7 @@ pipeline {
       steps {
         echo "Running tests..."
         // sh "sleep 5" // give Flask time to start
-        sh "python -m unittest test_app.py"
+        sh "python3 -m unittest test_app.py"
       }
     }
   }
