@@ -48,9 +48,9 @@ pipeline {
       }
     }
   }
-  post {
-    always {
-      input 'Waiting for human input before finishing pipeline.'
-    }
-  }
+  // post {
+  //   always {
+  //     input 'Waiting for human input before finishing pipeline.'
+  //   }
+  // }
 }
